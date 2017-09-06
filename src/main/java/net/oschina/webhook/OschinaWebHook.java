@@ -31,6 +31,7 @@ import hudson.security.ACL;
 import hudson.security.csrf.CrumbExclusion;
 import jenkins.model.*;
 import net.oschina.webhook.model.*;
+import net.oschina.webhook.OschinaPushTrigger;
 @Extension
 public class OschinaWebHook implements UnprotectedRootAction {
 	public static final String WEBHOOK_URL = "oschina";
@@ -53,40 +54,48 @@ public class OschinaWebHook implements UnprotectedRootAction {
 
 	public void getDynamic(final String projectName, final StaplerRequest request, StaplerResponse response) {
 		System.out.println("getDynamic.");
-//		System.out.println(request.getRequestURIWithQueryString());
-//		String method = request.getMethod();
-//		System.out.println(method);
-//		Iterator<String> restOfPathParts = Splitter.on('/').omitEmptyStrings().split(request.getRestOfPath())
-//				.iterator();
-//		Job<?, ?> project = resolveProject(projectName, restOfPathParts);
-//		if (project == null) {
-//			throw HttpResponses.notFound();
-//		}
-//
-//		switch (method) {
-//		case "POST":
-//			String eventHeader = request.getHeader("X-Coding-Event");
+		System.out.println(request.getRequestURIWithQueryString());
+		String method = request.getMethod();
+		System.out.println(method);
+		Iterator<String> restOfPathParts = Splitter.on('/').omitEmptyStrings().split(request.getRestOfPath())
+				.iterator();
+		Job<?, ?> project = resolveProject(projectName, restOfPathParts);
+		if (project == null) {
+			throw HttpResponses.notFound();
+		}
+
+		switch (method) {
+		case "POST":
+//			String eventHeader = request
 //			System.out.println(eventHeader);
+			
+			while(request.getHeaderNames().hasMoreElements()){
+				System.out.println(request.getHeaderNames().nextElement());
+			}
+						
 //			if (eventHeader == null) {
 //				return;
 //			}
 //			if (StringUtils.equals(eventHeader, "ping")) {
 //				return;
 //			}
-//			String json = getRequestBody(request);
-//			System.out.println(json);
+			String json = getRequestBody(request);
+			System.out.println("JSON:"+json);
 //			WebHook webHook = (WebHook) new Gson().fromJson(json, WebHook.class);
 //			System.out.println(webHook);
 //			ACL.impersonate(ACL.SYSTEM, () -> {
-//
+//				OschinaPushTrigger trigger = OschinaPushTrigger.getFromJob(project);
+//                if (trigger != null) {
+//                    trigger.onPost(webHook, eventHeader);
+//                }
 //			});
-//			throw hudson.util.HttpResponses.ok();
-//		case "GET":
-//			System.out.println("GET");
-//		default:
-//			System.out.println("Default");
-//			break;
-//		}
+			throw hudson.util.HttpResponses.ok();
+		case "GET":
+			System.out.println("GET");
+		default:
+			System.out.println("Default");
+			break;
+		}
 	}
 
 	private Job<?, ?> resolveProject(final String projectName, final Iterator<String> restOfPathParts) {

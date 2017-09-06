@@ -8,7 +8,6 @@ import jenkins.triggers.SCMTriggerItem;
 import hudson.model.*;
 import hudson.triggers.Trigger;
 import hudson.triggers.TriggerDescriptor;
-import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.Ancestor;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -18,7 +17,6 @@ import org.kohsuke.stapler.Stapler;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.ObjectStreamException;
 
 public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 
@@ -33,6 +31,18 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
         return name;
     }
 
+    public static OschinaPushTrigger getFromJob(Job<?, ?> job) {
+    	OschinaPushTrigger trigger = null;
+        if (job instanceof ParameterizedJobMixIn.ParameterizedJob) {
+            ParameterizedJobMixIn.ParameterizedJob p = (ParameterizedJobMixIn.ParameterizedJob) job;
+            for (Object t : p.getTriggers().values()) {
+                if (t instanceof OschinaPushTrigger) {
+                    trigger = (OschinaPushTrigger) t;
+                }
+            }
+        }
+        return trigger;
+    }
 
     @Extension 
     public static final class DescriptorImpl extends TriggerDescriptor {
