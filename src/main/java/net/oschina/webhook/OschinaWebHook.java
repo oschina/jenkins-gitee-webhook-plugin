@@ -4,7 +4,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.StaplerRequest;
@@ -53,42 +54,38 @@ public class OschinaWebHook implements UnprotectedRootAction {
 	}
 
 	public void getDynamic(final String projectName, final StaplerRequest request, StaplerResponse response) {
-		System.out.println("getDynamic.");
-		System.out.println(request.getRequestURIWithQueryString());
 		String method = request.getMethod();
-		System.out.println(method);
 		Iterator<String> restOfPathParts = Splitter.on('/').omitEmptyStrings().split(request.getRestOfPath())
 				.iterator();
-		Job<?, ?> project = resolveProject(projectName, restOfPathParts);
+		final Job<?, ?> project = resolveProject(projectName, restOfPathParts);
 		if (project == null) {
 			throw HttpResponses.notFound();
 		}
 
 		switch (method) {
 		case "POST":
-//			String eventHeader = request
-//			System.out.println(eventHeader);
-			
-			while(request.getHeaderNames().hasMoreElements()){
-				System.out.println(request.getHeaderNames().nextElement());
-			}
+			final String eventHeader = request.getHeader("X-Git-Oschina-Event");
+            if (eventHeader == null) {
+                return;
+            }
 						
-//			if (eventHeader == null) {
-//				return;
-//			}
-//			if (StringUtils.equals(eventHeader, "ping")) {
-//				return;
-//			}
 			String json = getRequestBody(request);
 			System.out.println("JSON:"+json);
-//			WebHook webHook = (WebHook) new Gson().fromJson(json, WebHook.class);
-//			System.out.println(webHook);
-//			ACL.impersonate(ACL.SYSTEM, () -> {
-//				OschinaPushTrigger trigger = OschinaPushTrigger.getFromJob(project);
-//                if (trigger != null) {
-//                    trigger.onPost(webHook, eventHeader);
-//                }
-//			});
+			final WebHook webHook = (WebHook) new Gson().fromJson(json, WebHook.class);
+			System.out.println(webHook);
+			ACL.impersonate(ACL.SYSTEM,new Runnable() {
+				
+				@Override
+				public void run() {
+					System.out.println("project:"+project);
+					OschinaPushTrigger trigger = OschinaPushTrigger.getFromJob(project);
+					System.out.println("trigger:"+trigger);
+					if (trigger != null) {
+						System.out.println("执行 trigger.post");
+                        trigger.onPost(webHook, eventHeader);
+                    }
+				}
+			});
 			throw hudson.util.HttpResponses.ok();
 		case "GET":
 			System.out.println("GET");
