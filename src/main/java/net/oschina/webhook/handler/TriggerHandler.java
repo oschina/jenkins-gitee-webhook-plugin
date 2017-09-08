@@ -6,6 +6,8 @@ import net.oschina.webhook.cause.CauseData;
 import net.oschina.webhook.cause.OschinaWebHookCause;
 import net.oschina.webhook.filter.BranchFilter;
 import net.oschina.webhook.model.Commit;
+import net.oschina.webhook.model.MergeRequest;
+import net.oschina.webhook.model.PullRequest;
 import net.oschina.webhook.model.WebHook;
 import static net.oschina.webhook.cause.CauseData.ActionType;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
@@ -16,6 +18,7 @@ import jenkins.model.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jgit.transport.URIish;
@@ -28,8 +31,8 @@ public class TriggerHandler {
 	private static final String NO_COMMIT = "0000000000000000000000000000000000000000";
 	private static final String CI_SKIP = "[ci-skip]";
 
-	private boolean triggerOnPush;
-    private boolean triggerOnMergeRequest;
+	private boolean triggerOnPush=true;
+    private boolean triggerOnMergeRequest=true;
     private String mergeRequestTriggerAction;
     private BranchFilter branchFilter;
     
@@ -54,14 +57,23 @@ public class TriggerHandler {
 				ActionType actionType = null;
 				String branch = null;
 				switch (event) {
-				case PUSH_EVENT:
-					System.out.println("PUSH_EVENT");
-                    break;
                 case MERGE_REQUEST_EVENT:
-                	System.out.println("MERGE_REQUEST_EVENT");
-                    break;
+                	MergeRequest mr = hook.getMerge_request();
+                    if (!isTriggerAction(mr.getAction())) {
+                        return;
+                    }
+                    shouldTrigger = triggerOnMergeRequest;
+                    actionType = ActionType.MR;
+                    branch = mr.getTarget_branch();
+                    break; 
                 case PULL_REQUEST_EVENT:
-                	System.out.println("PULL_REQUEST_EVENT");
+                	PullRequest pr = hook.getPull_request();
+                    if (!isTriggerAction(pr.getAction())) {
+                        return;
+                    }
+                    shouldTrigger = triggerOnMergeRequest;
+                    actionType = ActionType.PR;
+                    branch = pr.getTarget_branch();
                     break;
                 case PUSHHOOK:
                 	if (isNoRemoveBranchPush(hook)) {
@@ -69,15 +81,11 @@ public class TriggerHandler {
                         shouldTrigger = triggerOnPush;
                         actionType = ActionType.PUSH;
                         branch = shortenRefName(hook.getRef());
-                        System.out.println(actionType);
-                        System.out.println(branch);
                     }
                 	break;
                 default:
-                	System.out.println("event:"+event);
                     break;
 				}
-				
 				if (shouldTrigger) {
                     scheduleBuild(job, createActions(job, hook, actionType));
                 }
@@ -111,7 +119,6 @@ public class TriggerHandler {
 	}
 	
 	private CauseData buildCauseData(WebHook hook, ActionType actionType) {
-		System.out.println("buildCauseData:"+hook);
 		CauseData data = new CauseData();
 		data.setActionType(actionType);
         data.setToken(hook.getToken());
@@ -125,8 +132,43 @@ public class TriggerHandler {
         data.setAfter(hook.getAfter());
         data.setCommitId(hook.getAfter());
         data.setRepoUrl(hook.getRepository().getSsh_url());
-        System.out.println("Repository："+hook.getRepository());
 //        data.setProjectPath(hook.getRepository().projectPath());
+        
+        if (hook.getMerge_request() != null) {
+            MergeRequest mr = hook.getMerge_request();
+            data.setMergeRequestId(mr.getId());
+            data.setCommitId(mr.getMerge_commit_sha());
+            data.setMergeRequestIid(mr.getNumber());
+            data.setMergeRequestTitle(mr.getTitle());
+            data.setMergeRequestBody(mr.getBody());
+            data.setMergeRequestUrl(mr.getWeb_url());
+            data.setSourceBranch(shortenRef(mr.getSource_branch()));
+            data.setTargetBranch(shortenRef(mr.getTarget_branch()));
+            if (mr.getUser() != null) {
+                data.setUserName(mr.getUser().getName());
+                data.setUserUrl(mr.getUser().getWeb_url());
+            }
+        }
+        
+        if (hook.getPull_request() != null) {
+            PullRequest pr = hook.getPull_request();
+            data.setMergeRequestId(pr.getId());
+            data.setCommitId(pr.getMerge_commit_sha());
+            data.setMergeRequestIid(pr.getNumber());
+            data.setMergeRequestTitle(pr.getTitle());
+            data.setMergeRequestBody(pr.getBody());
+            data.setMergeRequestUrl(pr.getWeb_url());
+            data.setSourceProjectPath(pr.getSource_repository().projectPath());
+            data.setSourceBranch(shortenRef(pr.getSource_branch()));
+            data.setSourceRepoUrl(pr.getSource_repository().getSsh_url());
+            data.setSourceUser(pr.getSource_repository().getOwner().getGlobal_key());
+            data.setTargetBranch(shortenRef(pr.getTarget_branch()));
+            if (pr.getUser() != null) {
+                data.setUserName(pr.getUser().getName());
+                data.setUserUrl(pr.getUser().getWeb_url());
+            }
+        }
+        
         return data;
 	}
 	
@@ -150,11 +192,7 @@ public class TriggerHandler {
 		System.out.println("retrieveRevisionToBuild:"+actionType);
         switch (actionType) {
             case PUSH:
-                
-            	
-            	
             	if ((hook.getCommits() == null || hook.getCommits().isEmpty())) {
-            		System.out.println("1234");
             		if (isNewBranchPush(hook)) {
                         revision = hook.getAfter();
                     }
@@ -178,6 +216,9 @@ public class TriggerHandler {
         return revision;
 	}
 	
+	private boolean isTriggerAction(String action) {
+        return StringUtils.isEmpty(mergeRequestTriggerAction) || StringUtils.contains(mergeRequestTriggerAction, action);
+    }
 	
 	private boolean isNewBranchPush(WebHook hook) {
         return hook.getBefore() != null && hook.getBefore().equals(NO_COMMIT);

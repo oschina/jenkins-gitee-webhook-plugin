@@ -73,10 +73,7 @@ public class OschinaWebHook implements UnprotectedRootAction {
 			System.out.println("JSON:"+json);
 			final WebHook webHook = (WebHook) new Gson().fromJson(json, WebHook.class);
 			System.out.println(webHook);
-			
-			
 			ACL.impersonate(ACL.SYSTEM,new Runnable() {
-				
 				@Override
 				public void run() {
 					System.out.println("project:"+project);
@@ -134,7 +131,7 @@ public class OschinaWebHook implements UnprotectedRootAction {
 	}
 
 	@Extension
-	public static class CodingWebHookCrumbExclusion extends CrumbExclusion {
+	public static class OschinaWebHookCrumbExclusion extends CrumbExclusion {
 		@Override
 		public boolean process(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
 				throws IOException, ServletException {

@@ -10,14 +10,11 @@ public class XXXListener extends RunListener<Run<?, ?>> {
 
 	@Override
 	public void onCompleted(Run<?, ?> r, TaskListener listener) {
-		
-		System.out.println("XXXListener onCompleted.");
 		super.onCompleted(r, listener);
 	}
 
 	@Override
 	public void onStarted(Run<?, ?> r, TaskListener listener) {
-		System.out.println("XXXListener onStarted.");
 		super.onStarted(r, listener);
 	}
 

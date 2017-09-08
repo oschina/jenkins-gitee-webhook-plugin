@@ -3,8 +3,8 @@
          xmlns:f="/lib/form">
     <f:block>
         <table style="padding-left: 50px; width: 90%;">
-            <f:entry title="token值" field="webHookToken" help="/plugin/coding-webhook/help/help-webhook-token.html">
-                <f:textbox default="" placeholder="请输入TOKEN"/>
+            <f:entry title="WebHook密码：" field="webHookToken" help="/plugin/coding-webhook/help/help-webhook-token.html">
+                <f:textbox default="" placeholder="WebHook密码必须要与你码云WebHook的密码一致"/>
             </f:entry>
             <f:entry title="apitoken" field="apiToken" help="/plugin/coding-webhook/help/help-webhook-apitoken.html">
                 <f:textbox default="" placeholder="apitoken"/>
