@@ -4,6 +4,15 @@ public class Commit {
     private String web_url;
     private String short_message;
     private String sha;
+    
+    private String id;
+    
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public Committer getCommitter() {
 		return committer;
 	}

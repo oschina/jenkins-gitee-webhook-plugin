@@ -13,6 +13,24 @@ public class Repository {
 	private String web_url;
 	private User owner;
 
+	
+	private String url;
+	
+	
+	
+	
+	public String getUrl() {
+		return url;
+	}
+
+
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
+
 	public String getProject_id() {
 		return project_id;
 	}

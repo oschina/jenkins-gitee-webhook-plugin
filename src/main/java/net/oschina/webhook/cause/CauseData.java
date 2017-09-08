@@ -210,9 +210,9 @@ public class CauseData {
 			String getShortDescription(CauseData data) {
 				String pushedBy = data.getUserName();
 				if (pushedBy == null) {
-					return "Started by Coding push";
+					return "Started by Oschina push";
 				} else {
-					String s="Started by Coding push by %s";
+					String s="Started by Oschina push by %s";
 					return String.format(s, pushedBy);
 				}
 			}

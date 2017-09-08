@@ -73,6 +73,8 @@ public class OschinaWebHook implements UnprotectedRootAction {
 			System.out.println("JSON:"+json);
 			final WebHook webHook = (WebHook) new Gson().fromJson(json, WebHook.class);
 			System.out.println(webHook);
+			
+			
 			ACL.impersonate(ACL.SYSTEM,new Runnable() {
 				
 				@Override

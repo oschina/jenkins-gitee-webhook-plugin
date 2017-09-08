@@ -10,6 +10,7 @@ import net.oschina.webhook.filter.BranchFilterFactory;
 import net.oschina.webhook.filter.BranchFilterType;
 import net.oschina.webhook.handler.TriggerHandler;
 import net.oschina.webhook.model.WebHook;
+import net.sf.json.JSONObject;
 import hudson.model.*;
 import hudson.triggers.Trigger;
 import hudson.triggers.TriggerDescriptor;
@@ -27,24 +28,90 @@ import java.io.ObjectStreamException;
 
 public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 
-	private final String name;
-	private boolean ciSkip;
-	private String webHookToken;
-	private String apiToken;
-
-	private boolean triggerOnPush;
-    private boolean triggerOnMergeRequest;
-    private String mergeRequestTriggerAction;
-    private BranchFilterType branchFilterType;
-    private String includeBranchesSpec;
-    private String excludeBranchesSpec;
-    private String targetBranchRegex;
-	private transient TriggerHandler triggerHandler;
-
+	private  String name;
+	private  boolean ciSkip;
+	private  String webHookToken;
+	private  String apiToken;
+	private  boolean triggerOnPush;
+    private  boolean triggerOnMergeRequest;
+    private  String mergeRequestTriggerAction;
+    private  BranchFilterType branchFilterType;
+    private  String includeBranchesSpec;
+    private  String excludeBranchesSpec;
+    private  String targetBranchRegex;
+	private  TriggerHandler triggerHandler;
+	private  boolean addResultNote;
+	
+	
 	@DataBoundConstructor
-	public OschinaPushTrigger(String name) {
-		this.name = name;
-		initializeTriggerHandler();
+    public OschinaPushTrigger(String webHookToken, String apiToken,
+                             boolean triggerOnMergeRequest, String mergeRequestTriggerAction,
+                             boolean triggerOnPush, boolean addResultNote, boolean ciSkip,
+                             BranchFilterType branchFilterType, String includeBranchesSpec,
+                             String excludeBranchesSpec, String targetBranchRegex) {
+        this.webHookToken = webHookToken;
+        this.apiToken = apiToken;
+        this.triggerOnPush = triggerOnPush;
+        this.triggerOnMergeRequest = triggerOnMergeRequest;
+        this.mergeRequestTriggerAction = mergeRequestTriggerAction;
+        this.addResultNote = addResultNote;
+        this.ciSkip = ciSkip;
+        this.branchFilterType = branchFilterType;
+        this.includeBranchesSpec = includeBranchesSpec;
+        this.excludeBranchesSpec = excludeBranchesSpec;
+        this.targetBranchRegex = targetBranchRegex;
+        initializeTriggerHandler();
+    }
+	
+	
+	public TriggerHandler getTriggerHandler() {
+		return triggerHandler;
+	}
+
+
+	public boolean isAddResultNote() {
+		return addResultNote;
+	}
+
+
+	public boolean isCiSkip() {
+		return ciSkip;
+	}
+
+	public String getWebHookToken() {
+		return webHookToken;
+	}
+
+	public String getApiToken() {
+		return apiToken;
+	}
+
+	public boolean isTriggerOnPush() {
+		return triggerOnPush;
+	}
+
+	public boolean isTriggerOnMergeRequest() {
+		return triggerOnMergeRequest;
+	}
+
+	public String getMergeRequestTriggerAction() {
+		return mergeRequestTriggerAction;
+	}
+
+	public BranchFilterType getBranchFilterType() {
+		return branchFilterType;
+	}
+
+	public String getIncludeBranchesSpec() {
+		return includeBranchesSpec;
+	}
+
+	public String getExcludeBranchesSpec() {
+		return excludeBranchesSpec;
+	}
+
+	public String getTargetBranchRegex() {
+		return targetBranchRegex;
 	}
 
 	public String getName() {
@@ -75,8 +142,10 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 
 	public static OschinaPushTrigger getFromJob(Job<?, ?> job) {
 		OschinaPushTrigger trigger = null;
+		
 		if (job instanceof ParameterizedJobMixIn.ParameterizedJob) {
 			ParameterizedJobMixIn.ParameterizedJob p = (ParameterizedJobMixIn.ParameterizedJob) job;
+			System.out.println(p.getTriggers().values());
 			for (Object t : p.getTriggers().values()) {
 				if (t instanceof OschinaPushTrigger) {
 					trigger = (OschinaPushTrigger) t;
@@ -117,6 +186,13 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 		private StringBuilder retrieveProjectUrl(Job<?, ?> project) {
 			return new StringBuilder().append(Jenkins.getInstance().getRootUrl()).append(OschinaWebHook.WEBHOOK_URL)
 					.append(retrieveParentUrl(project)).append('/').append(Util.rawEncode(project.getName()));
+		}
+		
+		
+		@Override
+		public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
+			save();
+			return super.configure(req, formData);
 		}
 
 		private StringBuilder retrieveParentUrl(Item item) {
