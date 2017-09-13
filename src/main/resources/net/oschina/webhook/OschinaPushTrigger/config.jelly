@@ -3,55 +3,9 @@
          xmlns:f="/lib/form">
     <f:block>
         <table style="padding-left: 50px; width: 90%;">
-            <f:entry title="WebHook密码：" field="webHookToken" help="/plugin/coding-webhook/help/help-webhook-token.html">
+            <f:entry title="WebHook密码：" field="webHookToken">
                 <f:textbox default="" placeholder="WebHook密码必须要与你码云WebHook的密码一致"/>
             </f:entry>
-            <f:entry title="apitoken" field="apiToken" help="/plugin/coding-webhook/help/help-webhook-apitoken.html">
-                <f:textbox default="" placeholder="apitoken"/>
-            </f:entry>
-            <f:optionalBlock title="mrpr" name="triggerOnMergeRequest"
-                             checked="${instance.triggerOnMergeRequest}" inline="true"
-                             help="/plugin/coding-webhook/help/help-merge-request.html">
-                <f:entry title="${%coding.webhook.build.on.mrpr.action}" field="mergeRequestTriggerAction"
-                         help="/plugin/coding-webhook/help/help-mrpr-action.html">
-                    <f:textbox default="create,synchronize" placeholder="请输入"/>
-                </f:entry>
-            </f:optionalBlock>
-            <f:entry title="push" field="triggerOnPush">
-                <f:checkbox default="false"/>
-            </f:entry>
-            <f:entry title="note" field="addResultNote">
-                <f:checkbox default="false"/>
-            </f:entry>
-            <f:entry title="ciskip" field="ciSkip" help="/plugin/coding-webhook/help/help-ci-skip.html">
-                <f:checkbox default="true"/>
-            </f:entry>
-            <f:block>
-                <table style="margin-left:10px">
-                    <f:radioBlock name="branchFilterType" value="All" title="branch.all"
-                                  checked="${instance.branchFilterType == null || instance.branchFilterType == 'All'}"
-                                  inline="true" help="/plugin/coding-webhook/help/help-noBranchFiltering.html"/>
-                    <f:radioBlock name="branchFilterType" value="NameBasedFilter" title="branch.filter.name"
-                                  checked="${instance.branchFilterType == 'NameBasedFilter'}" inline="true"
-                                  help="/plugin/coding-webhook/help/help-allowedBranches.html">
-                        <f:entry title="include">
-                            <f:textbox name="includeBranchesSpec" field="includeBranchesSpec" autoCompleteDelimChar=","/>
-                        </f:entry>
-                        <f:entry title="exclude">
-                            <f:textbox name="excludeBranchesSpec" field="excludeBranchesSpec" autoCompleteDelimChar=","/>
-                        </f:entry>
-                    </f:radioBlock>
-
-                    <f:radioBlock name="branchFilterType" value="RegexBasedFilter"
-                                  title="filter.regex"
-                                  checked="${instance.branchFilterType == 'RegexBasedFilter'}" inline="true"
-                                  help="/plugin/coding-webhook/help/help-filterBranchesByRegex.html">
-                        <f:entry title="regex.value">
-                            <f:textbox name="targetBranchRegex" field="targetBranchRegex"/>
-                        </f:entry>
-                    </f:radioBlock>
-                </table>
-            </f:block>
         </table>
     </f:block>
 </j:jelly>

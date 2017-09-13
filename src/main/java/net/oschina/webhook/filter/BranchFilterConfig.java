@@ -8,6 +8,11 @@ public class BranchFilterConfig {
     private String excludeBranchesSpec;
     private String targetBranchRegex;
     
+    
+    public BranchFilterConfig(BranchFilterType type){
+    	this.type = type;
+    }
+    
     public BranchFilterConfig(BranchFilterType type,String includeBranchesSpec,
     		String excludeBranchesSpec,String targetBranchRegex){
     	this.type = type;

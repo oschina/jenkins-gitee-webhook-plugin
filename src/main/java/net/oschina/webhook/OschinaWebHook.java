@@ -4,9 +4,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -136,9 +134,11 @@ public class OschinaWebHook implements UnprotectedRootAction {
 		public boolean process(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
 				throws IOException, ServletException {
 			String pathInfo = req.getPathInfo();
-			System.out.println(pathInfo);
-			chain.doFilter(req, resp);
-			return true;
+            if (pathInfo != null && pathInfo.startsWith('/' + WEBHOOK_URL + '/')) {
+                chain.doFilter(req, resp);
+                return true;
+            }
+            return false;
 		}
 	}
 }

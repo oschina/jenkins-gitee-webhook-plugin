@@ -32,8 +32,6 @@ public class WebHookEnvironmentContributor extends EnvironmentContributor {
 
     @Override
     public void buildEnvironmentFor(@Nonnull Run r, @Nonnull EnvVars envs, @Nonnull TaskListener listener) throws IOException, InterruptedException {
-        System.out.println("buildEnvironmentFor.");
-    	
     	OschinaWebHookCause cause = (OschinaWebHookCause) r.getCause(OschinaWebHookCause.class);
         if (cause == null) {
             return;

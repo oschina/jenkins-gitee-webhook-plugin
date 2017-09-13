@@ -221,7 +221,34 @@ public class CauseData {
 			@Override
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
-				String s ="Started by %s's Merge Request #%d: %s(%s =&gt; %s) at Coding";
+				String s ="Started by %s's Merge Request #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(),
+						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+			}
+		},
+		TAG{
+			@Override
+			String getShortDescription(CauseData data) {
+				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
+				String s ="Started by %s's TAG #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(),
+						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+			}
+		},
+		NOTE{
+			@Override
+			String getShortDescription(CauseData data) {
+				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
+				String s ="Started by %s's NOTE #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(),
+						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+			}
+		},
+		ISSUE{
+			@Override
+			String getShortDescription(CauseData data) {
+				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
+				String s ="Started by %s's ISSUE #%d: %s(%s =&gt; %s) at Oschina";
 				return String.format(s, user, data.getMergeRequestIid(),
 						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
 			}
@@ -230,7 +257,7 @@ public class CauseData {
 			@Override
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
-				String s = "Started by %s's Pull Request #%d: %s(%s:%s =&gt; %s) at Coding";
+				String s = "Started by %s's Pull Request #%d: %s(%s:%s =&gt; %s) at Oschina";
 				return String.format(s, user, data.getMergeRequestIid(),
 						data.getMergeRequestTitle(), data.getSourceUser(), data.getSourceBranch(),
 						data.getTargetBranch());

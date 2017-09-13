@@ -29,37 +29,22 @@ import java.io.ObjectStreamException;
 public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 
 	private  String name;
-	private  boolean ciSkip;
 	private  String webHookToken;
-	private  String apiToken;
 	private  boolean triggerOnPush;
     private  boolean triggerOnMergeRequest;
-    private  String mergeRequestTriggerAction;
     private  BranchFilterType branchFilterType;
-    private  String includeBranchesSpec;
-    private  String excludeBranchesSpec;
-    private  String targetBranchRegex;
 	private  TriggerHandler triggerHandler;
 	private  boolean addResultNote;
 	
 	
 	@DataBoundConstructor
-    public OschinaPushTrigger(String webHookToken, String apiToken,
-                             boolean triggerOnMergeRequest, String mergeRequestTriggerAction,
-                             boolean triggerOnPush, boolean addResultNote, boolean ciSkip,
-                             BranchFilterType branchFilterType, String includeBranchesSpec,
-                             String excludeBranchesSpec, String targetBranchRegex) {
+    public OschinaPushTrigger(String webHookToken,  boolean triggerOnMergeRequest, 
+                             boolean triggerOnPush,
+                             BranchFilterType branchFilterType) {
         this.webHookToken = webHookToken;
-        this.apiToken = apiToken;
         this.triggerOnPush = triggerOnPush;
         this.triggerOnMergeRequest = triggerOnMergeRequest;
-        this.mergeRequestTriggerAction = mergeRequestTriggerAction;
-        this.addResultNote = addResultNote;
-        this.ciSkip = ciSkip;
         this.branchFilterType = branchFilterType;
-        this.includeBranchesSpec = includeBranchesSpec;
-        this.excludeBranchesSpec = excludeBranchesSpec;
-        this.targetBranchRegex = targetBranchRegex;
         initializeTriggerHandler();
     }
 	
@@ -74,17 +59,11 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 	}
 
 
-	public boolean isCiSkip() {
-		return ciSkip;
-	}
 
 	public String getWebHookToken() {
 		return webHookToken;
 	}
 
-	public String getApiToken() {
-		return apiToken;
-	}
 
 	public boolean isTriggerOnPush() {
 		return triggerOnPush;
@@ -94,24 +73,9 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 		return triggerOnMergeRequest;
 	}
 
-	public String getMergeRequestTriggerAction() {
-		return mergeRequestTriggerAction;
-	}
 
 	public BranchFilterType getBranchFilterType() {
 		return branchFilterType;
-	}
-
-	public String getIncludeBranchesSpec() {
-		return includeBranchesSpec;
-	}
-
-	public String getExcludeBranchesSpec() {
-		return excludeBranchesSpec;
-	}
-
-	public String getTargetBranchRegex() {
-		return targetBranchRegex;
 	}
 
 	public String getName() {
@@ -126,17 +90,18 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 	
 	private void initializeTriggerHandler() {
 		
-		BranchFilterConfig branchFilterConfig = new BranchFilterConfig(
-                branchFilterType, includeBranchesSpec, excludeBranchesSpec, targetBranchRegex);
+		BranchFilterConfig branchFilterConfig = new BranchFilterConfig(branchFilterType);
         
-		this.triggerHandler = new TriggerHandler(this.triggerOnPush, this.triggerOnMergeRequest,
-				mergeRequestTriggerAction, BranchFilterFactory.newBranchFilter(branchFilterConfig));
+		this.triggerHandler = new TriggerHandler(true, true,
+				BranchFilterFactory.newBranchFilter(branchFilterConfig));
 	}
 
 	public void onPost(WebHook webHook, String event) {
-		if (StringUtils.isEmpty(webHookToken) || StringUtils.equals(webHookToken, webHook.getToken())) {
+		System.out.println(webHookToken);
+		System.out.println( webHook.getPassword());
+		if (StringUtils.isEmpty(webHookToken) || StringUtils.equals(webHookToken, webHook.getPassword())) {
 			System.out.println("OschinaPushTrigger onPost.");
-			triggerHandler.handle(job, webHook, event, ciSkip);
+			triggerHandler.handle(job, webHook, event);
 		}
 	}
 
@@ -175,7 +140,7 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 			Job<?, ?> project = retrieveCurrentJob();
 			if (project != null) {
 				try {
-					return retrieveProjectUrl(project).toString();
+					return "Gitee webHook插件:(webHook请求地址:"+retrieveProjectUrl(project).toString()+")";
 				} catch (IllegalStateException e) {
 					// nothing to do
 				}
