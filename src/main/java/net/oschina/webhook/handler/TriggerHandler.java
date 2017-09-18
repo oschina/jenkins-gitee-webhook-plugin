@@ -6,7 +6,6 @@ import net.oschina.webhook.cause.CauseData;
 import net.oschina.webhook.cause.OschinaWebHookCause;
 import net.oschina.webhook.filter.BranchFilter;
 import net.oschina.webhook.model.Commit;
-import net.oschina.webhook.model.MergeRequest;
 import net.oschina.webhook.model.WebHook;
 import static net.oschina.webhook.cause.CauseData.ActionType;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
