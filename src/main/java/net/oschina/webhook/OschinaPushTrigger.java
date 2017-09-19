@@ -140,12 +140,12 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 			Job<?, ?> project = retrieveCurrentJob();
 			if (project != null) {
 				try {
-					return "Gitee webHook插件 (webHook请求地址:"+retrieveProjectUrl(project).toString()+")";
+					return "Gitee WebHook插件 (在码云项目的WebHooks使用这个URL地址："+retrieveProjectUrl(project).toString()+")";
 				} catch (IllegalStateException e) {
 					// nothing to do
 				}
 			}
-			return "test12345";
+			return "";
 		}
 
 		private StringBuilder retrieveProjectUrl(Job<?, ?> project) {

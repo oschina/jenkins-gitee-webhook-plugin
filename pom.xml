@@ -26,9 +26,9 @@
 			by the plugin. -->
 	</properties>
 
-	<name>TODO Plugin</name>
-	<description>TODO</description>
-	<url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
+	<name>Gitee WebHook Plugin</name>
+	<description>CI with Gitee</description>
+	<url>https://wiki.jenkins-ci.org/display/JENKINS/Gitee+WebHookPlugin</url>
 
 	<!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for 
 		the applicable one if needed. -->
