@@ -1,0 +1,11 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core"
+         xmlns:f="/lib/form">
+    <f:block>
+        <table style="padding-left: 50px; width: 90%;">
+            <f:entry title="WebHook密码：" field="webHookToken">
+                <f:textbox default="" placeholder="WebHook密码必须要与你码云WebHook的密码一致"/>
+            </f:entry>
+        </table>
+    </f:block>
+</j:jelly>
