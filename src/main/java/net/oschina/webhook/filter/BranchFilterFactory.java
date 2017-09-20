@@ -1,5 +1,3 @@
-package net.oschina.webhook.filter;
-
 /**
  * Copyright (C) 2017 ChengSong Hu <644340980@qq.com>
  * Copyright (C) 2016 Shuanglei Tao <tsl0922@gmail.com>
@@ -17,6 +15,8 @@ package net.oschina.webhook.filter;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package net.oschina.webhook.filter;
+
 public class BranchFilterFactory {
 
 	private BranchFilterFactory() { }

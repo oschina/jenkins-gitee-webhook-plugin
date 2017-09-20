@@ -1,8 +1,3 @@
-package net.oschina.webhook.cause;
-
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * Copyright (C) 2017 ChengSong Hu <644340980@qq.com>
  * Copyright (C) 2016 Shuanglei Tao <tsl0922@gmail.com>
@@ -20,6 +15,9 @@ import org.apache.commons.lang.StringUtils;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package net.oschina.webhook.cause;
+import org.apache.commons.lang.StringUtils;
+
 public class CauseData {
 
 	private ActionType actionType;
@@ -228,7 +226,7 @@ public class CauseData {
 				if (pushedBy == null) {
 					return "Started by Oschina push";
 				} else {
-					String s="Started by Oschina push by %s";
+					String s = "Started by Oschina push by %s";
 					return String.format(s, pushedBy);
 				}
 			}
@@ -237,36 +235,36 @@ public class CauseData {
 			@Override
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
-				String s ="Started by %s's Merge Request #%d: %s(%s =&gt; %s) at Oschina";
-				return String.format(s, user, data.getMergeRequestIid(),
-						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+				String s = "Started by %s's Merge Request #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(), data.getMergeRequestTitle(),
+						data.getSourceBranch(), data.getTargetBranch());
 			}
 		},
-		TAG{
+		TAG {
 			@Override
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
-				String s ="Started by %s's TAG #%d: %s(%s =&gt; %s) at Oschina";
-				return String.format(s, user, data.getMergeRequestIid(),
-						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+				String s = "Started by %s's TAG #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(), data.getMergeRequestTitle(),
+						data.getSourceBranch(), data.getTargetBranch());
 			}
 		},
-		NOTE{
+		NOTE {
 			@Override
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
-				String s ="Started by %s's NOTE #%d: %s(%s =&gt; %s) at Oschina";
-				return String.format(s, user, data.getMergeRequestIid(),
-						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+				String s = "Started by %s's NOTE #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(), data.getMergeRequestTitle(),
+						data.getSourceBranch(), data.getTargetBranch());
 			}
 		},
-		ISSUE{
+		ISSUE {
 			@Override
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
-				String s ="Started by %s's ISSUE #%d: %s(%s =&gt; %s) at Oschina";
-				return String.format(s, user, data.getMergeRequestIid(),
-						data.getMergeRequestTitle(), data.getSourceBranch(), data.getTargetBranch());
+				String s = "Started by %s's ISSUE #%d: %s(%s =&gt; %s) at Oschina";
+				return String.format(s, user, data.getMergeRequestIid(), data.getMergeRequestTitle(),
+						data.getSourceBranch(), data.getTargetBranch());
 			}
 		},
 		PR {
@@ -274,9 +272,8 @@ public class CauseData {
 			String getShortDescription(CauseData data) {
 				String user = StringUtils.isEmpty(data.getUserName()) ? "Unknown" : data.getUserName();
 				String s = "Started by %s's Pull Request #%d: %s(%s:%s =&gt; %s) at Oschina";
-				return String.format(s, user, data.getMergeRequestIid(),
-						data.getMergeRequestTitle(), data.getSourceUser(), data.getSourceBranch(),
-						data.getTargetBranch());
+				return String.format(s, user, data.getMergeRequestIid(), data.getMergeRequestTitle(),
+						data.getSourceUser(), data.getSourceBranch(), data.getTargetBranch());
 			}
 		};
 
