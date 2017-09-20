@@ -1,3 +1,5 @@
+本插件参考自 [https://github.com/jenkinsci/coding-webhook-plugin](https://github.com/jenkinsci/coding-webhook-plugin) 并保留原项目的许可证。
+
 ### 安装方式
 
 ### 安装方式1 离线安装
