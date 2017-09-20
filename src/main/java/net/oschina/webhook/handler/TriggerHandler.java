@@ -1,5 +1,21 @@
 package net.oschina.webhook.handler;
-
+/**
+ * Copyright (C) 2017 ChengSong Hu <644340980@qq.com>
+ * Copyright (C) 2016 Shuanglei Tao <tsl0922@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import hudson.model.*;
 import net.oschina.webhook.*;
 import net.oschina.webhook.cause.CauseData;
@@ -60,22 +76,10 @@ public class TriggerHandler {
 				String branch = null;
 				switch (event) {
 				case PUSH_TAG_REQUEST_EVENT:
-//					branch = hook.getTarget_branch();
-//					System.out.println("PUSH_TAG_REQUEST_EVENT目标分支:" + branch);
-//					shouldTrigger = triggerOnTagRequest;
-//					actionType = ActionType.TAG;
 					break;
 				case NOTE_REQUEST_EVENT:
-//					branch = hook.getTarget_branch();
-//					System.out.println("NOTE_REQUEST_EVENT目标分支:" + branch);
-//					shouldTrigger = triggerOnNoteRequest;
-//					actionType = ActionType.NOTE;
 					break;
 				case ISSUE_REQUEST_EVENT:
-//					branch = hook.getTarget_branch();
-//					System.out.println("ISSUE_REQUEST_EVENT目标分支:" + branch);
-//					shouldTrigger = triggerOnIssueRequest;
-//					actionType = ActionType.ISSUE;
 					break;
 				case MERGE_REQUEST_EVENT:
 					branch = hook.getTarget_branch();
@@ -83,7 +87,6 @@ public class TriggerHandler {
 					if(commit==null){
 						return;
 					}
-					System.out.println("MERGE_REQUEST_EVENT目标分支:" + branch);
 					shouldTrigger = triggerOnMergeRequest;
 					actionType = ActionType.MR;
 					break;
@@ -169,7 +172,6 @@ public class TriggerHandler {
 				}
 			} else {
 				List<Commit> commits = hook.getCommits();
-				System.out.println(commits.get(commits.size() - 1).getId());
 				revision = commits.get(commits.size() - 1).getId();
 			}
 			break;
@@ -178,14 +180,6 @@ public class TriggerHandler {
 			 System.out.println("commit_sha:"+commit_sha);
 			 revision = commit_sha;
 			break;
-		case PR:
-			 revision = "5b8589300c13ce4d47478763c9ca6bde42be4c91";
-//		case TAG:
-//			 revision = "5b8589300c13ce4d47478763c9ca6bde42be4c91";
-//		case NOTE:
-//			 revision = "5b8589300c13ce4d47478763c9ca6bde42be4c91";	 
-//		case NOTE:
-//			 revision = "5b8589300c13ce4d47478763c9ca6bde42be4c91";	 	 
 		default:
 			break;
 		}

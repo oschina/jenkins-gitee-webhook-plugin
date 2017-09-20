@@ -1,5 +1,21 @@
 package net.oschina.webhook;
-
+/**
+ * Copyright (C) 2017 ChengSong Hu <644340980@qq.com>
+ * Copyright (C) 2016 Shuanglei Tao <tsl0922@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import hudson.Extension;
 import hudson.Util;
 import hudson.util.FormValidation;
@@ -100,7 +116,6 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 		System.out.println(webHookToken);
 		System.out.println( webHook.getPassword());
 		if (StringUtils.isEmpty(webHookToken) || StringUtils.equals(webHookToken, webHook.getPassword())) {
-			System.out.println("OschinaPushTrigger onPost.");
 			triggerHandler.handle(job, webHook, event);
 		}
 	}
@@ -110,7 +125,6 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 		
 		if (job instanceof ParameterizedJobMixIn.ParameterizedJob) {
 			ParameterizedJobMixIn.ParameterizedJob p = (ParameterizedJobMixIn.ParameterizedJob) job;
-			System.out.println(p.getTriggers().values());
 			for (Object t : p.getTriggers().values()) {
 				if (t instanceof OschinaPushTrigger) {
 					trigger = (OschinaPushTrigger) t;
@@ -142,7 +156,6 @@ public class OschinaPushTrigger extends Trigger<Job<?, ?>> {
 				try {
 					return "Gitee WebHook插件 (在码云项目的WebHooks使用这个URL地址："+retrieveProjectUrl(project).toString()+")";
 				} catch (IllegalStateException e) {
-					// nothing to do
 				}
 			}
 			return "";
